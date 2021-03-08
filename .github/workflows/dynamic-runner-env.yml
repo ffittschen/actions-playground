@@ -31,6 +31,7 @@ jobs:
   
   # This workflow contains a single job called "build"
   build:
+    needs: prechecks
     # The type of runner that the job will run on
     runs-on: ubuntu-${{ needs.prechecks.outputs.ubuntu_version }}
 
