@@ -7,8 +7,8 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
 #  push:
 #    branches: [ main ]
-#  pull_request:
-#    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -43,8 +43,24 @@ jobs:
   deployment:
     runs-on: ubuntu-${{ github.event.inputs.ubuntu_version }}
     environment: 
-      name: alpha
+      name: feature
       url: https://github.com
     steps:
+      - name: Create GitHub deployment
+        uses: chrnorm/deployment-action@v2
+        id: deployment
+        with:
+          token: '${{ github.token }}'
+          environment-url: https://github.com
+          environment: feature-123
+          transient-environment: true
       - name: deploy
-        run: echo 'Hello, deployment!'
+        run: 'echo "Hello, deployment! Secret: ${{ env.SOME_FEATURE_SECRET }}"'
+      - name: Update deployment status
+        if: always()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: '${{ github.token }}'
+          environment-url: ${{ steps.deployment.outputs.environment_url }}
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+          state: ${{ job.status }}
