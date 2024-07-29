@@ -1,0 +1,20 @@
+name: Expression test
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      boolean_condition:
+        description: Some boolean condition
+        required: true
+        type: boolean
+        default: true
+jobs:
+  expression_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Expression test step
+        uses: ./.github/actions/composite-foo
+        with:
+          boolean-condition: ${{ inputs.boolean_condition }}

@@ -1,0 +1,13 @@
+name: 'Composite Foo'
+description: 'Test of a composite action'
+inputs:
+  boolean-condition:
+    required: false
+    default: 'true'
+outputs: {}
+runs:
+  using: 'composite'
+  steps:
+    - name: Run some command
+      run: |
+        echo "Hello${{ if eq(inputs.boolean-condition, 'true') }} world{{ end }}!"
