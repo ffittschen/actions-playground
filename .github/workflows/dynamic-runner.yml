@@ -26,12 +26,12 @@ jobs:
     steps:
       - name: Debug input
         run: |
-          echo "${{ fromJSON(inputs.runner) }}"
+          echo "${{ inputs.runner }}"
 
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ${{ fromJSON(inputs.runner) }}
+    runs-on: ${{ inputs.runner }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
