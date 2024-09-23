@@ -18,7 +18,7 @@ on:
     inputs:
       runner:
         description: 'Runner labels'
-        default: '[ubuntu-latest]'
+        default: "['ubuntu-latest']"
         type: string
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -26,7 +26,7 @@ jobs:
   resolve_runner:
     runs-on: ${{ vars.EPHEMERAL_RUNNER }}
     env:
-      EPHEMERAL_RUNNER: '[${{ vars.EPHEMERAL_RUNNER }}]'
+      EPHEMERAL_RUNNER: "['${{ vars.EPHEMERAL_RUNNER }}']"
       INPUTS_RUNNER: '${{ github.event.inputs.runner }}'
     outputs:
       resolved-runner: ${{ steps.resolve-runner.outputs.RESOLVED_RUNNER }}
@@ -35,15 +35,6 @@ jobs:
         id: resolve-runner
         run: |
           echo "RESOLVED_RUNNER=${INPUTS_RUNNER:-$EPHEMERAL_RUNNER}" >> "$GITHUB_OUTPUT"
-
-  debug:
-    runs-on: ${{ vars.EPHEMERAL_RUNNER }}
-    needs: resolve_runner
-    steps:
-      - name: Debug input
-        run: |
-          echo "resolved-runner=${{ needs.resolve_runner.outputs.resolved-runner }}"
-          echo "fromJSON(resolved-runner)=${{ fromJSON(needs.resolve_runner.outputs.resolved-runner) }}"
 
   # This workflow contains a single job called "build"
   build:
