@@ -15,7 +15,6 @@ on:
     inputs:
       runner:
         description: 'Runner labels'
-        required: true
         default: '[ubuntu-latest]'
         type: string
 
