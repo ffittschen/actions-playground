@@ -40,7 +40,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     strategy:
       matrix:
-        runner: ${{ fromJSON(needs.resolve_runners.outputs.resolved-runners).runner }}
+        runner: ${{ fromJSON(needs.resolve_runners.outputs.resolved-runners).runners }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
