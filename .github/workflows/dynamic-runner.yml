@@ -13,31 +13,34 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      runner:
-        description: 'Runner labels'
-        default: "['ubuntu-latest']"
+      runners:
+        description: 'Runner labels (JSON array of arrays)'
         type: string
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  resolve_runner:
+  resolve_runners:
     runs-on: ${{ vars.EPHEMERAL_RUNNER }}
     env:
-      EPHEMERAL_RUNNER: "['${{ vars.EPHEMERAL_RUNNER }}']"
-      INPUTS_RUNNER: '${{ github.event.inputs.runner }}'
+      DEFAULT_RUNNERS: '[["ubuntu-latest"], ["ubuntu-24.04"]]'
+      INPUTS_RUNNERS: '${{ github.event.inputs.runners }}'
     outputs:
-      resolved-runner: ${{ steps.resolve-runner.outputs.RESOLVED_RUNNER }}
+      resolved-runners: ${{ steps.resolve-runners.outputs.RESOLVED_RUNNERS }}
     steps:
-      - name: Resolve Runner
-        id: resolve-runner
+      - name: Resolve Runners
+        id: resolve-runners
         run: |
-          echo "RESOLVED_RUNNER=${INPUTS_RUNNER:-$EPHEMERAL_RUNNER}" >> "$GITHUB_OUTPUT"
+          RESOLVED_RUNNERS='{"runners":${INPUTS_RUNNERS:-$DEFAULT_RUNNERS}}'
+          echo "${RESOLVED_RUNNERS}" >> "$GITHUB_OUTPUT"
 
   # This workflow contains a single job called "build"
   build:
+    needs: resolve_runners
     # The type of runner that the job will run on
-    runs-on: ${{ fromJSON(needs.resolve_runner.outputs.resolved-runner) }}
-    needs: resolve_runner
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: ${{ fromJSON(needs.resolve_runners.outputs.resolved-runners).runner }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
