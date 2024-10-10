@@ -30,8 +30,8 @@ jobs:
       - name: Resolve Runners
         id: resolve-runners
         run: |
-          RESOLVED_RUNNERS="\"{\"runners\":${INPUTS_RUNNERS:-$DEFAULT_RUNNERS}}\""
-          echo "${RESOLVED_RUNNERS}" >> "$GITHUB_OUTPUT"
+          RESOLVED_RUNNERS="{\"runners\":${INPUTS_RUNNERS:-$DEFAULT_RUNNERS}}"
+          echo "RESOLVED_RUNNERS=${RESOLVED_RUNNERS}" >> "$GITHUB_OUTPUT"
 
   # This workflow contains a single job called "build"
   build:
