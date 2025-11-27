@@ -1,0 +1,29 @@
+name: Trigger Workflow
+on:
+  workflow_dispatch:
+    inputs:
+      string_input:
+        required: true
+        type: string
+
+jobs:
+  prechecks:
+    runs-on: ubuntu-latest
+    steps:
+      - id: step1
+        run: echo "Calling reusable workflow with input '${{ inputs.string_input }}'"
+
+  call-workflow-in-local-repo:
+    needs: prechecks
+    uses: ./.github/workflows/reusable_workflow.yml
+    with:
+      string_input: ${{ inputs.string_input }}
+
+  conclusion:
+    needs: call-workflow-in-local-repo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print results
+        run: |
+          echo "Output from reused job: ${{ needs.call-workflow-in-local-repo.outputs.string_output }}"
+
