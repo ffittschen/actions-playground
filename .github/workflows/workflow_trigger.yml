@@ -25,5 +25,5 @@ jobs:
     steps:
       - name: Print results
         run: |
-          echo "Output from reused job: ${{ needs.call-workflow-in-local-repo.outputs.string_output }}"
+          echo "Output from reused job: ${{ needs.call-workflow-in-local-repo.outputs.workflow_output1 }} ${{ needs.call-workflow-in-local-repo.outputs.workflow_output2 }}"
 
