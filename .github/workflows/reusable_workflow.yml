@@ -32,7 +32,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: job1
     steps:
-      - run: sleep 3600
+      - name: Sleep
+        shell: bash
+        run: sleep 30s
   job3:
     runs-on: ubuntu-latest
     needs: job2
